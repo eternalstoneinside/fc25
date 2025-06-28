@@ -1,4 +1,5 @@
 const allTeams = [
+  // Твої попередні команди
   {
     name: "Real Madrid",
     logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
@@ -39,14 +40,13 @@ const allTeams = [
     name: "AC Milan",
     logo: "https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg",
   },
-  // Нові додані команди
   {
     name: "Aston Villa",
-    logo: "https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg",
+    logo: "img/aston-villa.png",
   },
   {
     name: "Girona",
-    logo: "https://upload.wikimedia.org/wikipedia/en/9/98/Girona_FC_logo.svg",
+    logo: "img/girona.png",
   },
   {
     name: "Borussia Dortmund",
@@ -54,15 +54,15 @@ const allTeams = [
   },
   {
     name: "Inter Milan",
-    logo: "https://upload.wikimedia.org/wikipedia/en/0/0b/Inter_Milan.svg",
+    logo: "img/inter.png",
   },
   {
     name: "Atletico Madrid",
-    logo: "https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg",
+    logo: "img/atletico-madrid.png",
   },
   {
     name: "Sevilla",
-    logo: "https://upload.wikimedia.org/wikipedia/en/3/3c/Sevilla_FC_logo.svg",
+    logo: "img/sevilla.png",
   },
   {
     name: "Napoli",
@@ -86,7 +86,7 @@ const allTeams = [
   },
   {
     name: "Olympique Lyonnais",
-    logo: "https://upload.wikimedia.org/wikipedia/en/c/c6/Olympique_Lyonnais.svg",
+    logo: "img/olimpiq.png",
   },
   {
     name: "Ajax",
@@ -94,7 +94,7 @@ const allTeams = [
   },
   {
     name: "Benfica",
-    logo: "https://upload.wikimedia.org/wikipedia/en/8/89/SL_Benfica_logo.svg",
+    logo: "img/benfica.webp",
   },
   {
     name: "Porto",
@@ -102,23 +102,140 @@ const allTeams = [
   },
   {
     name: "Villarreal",
-    logo: "https://upload.wikimedia.org/wikipedia/en/7/70/Villarreal_CF_logo.svg",
+    logo: "img/villareal.png",
   },
   {
     name: "RB Leipzig",
     logo: "https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg",
   },
   {
+    name: "Fiorentina",
+    logo: "img/fiorentina.png",
+  },
+  {
+    name: "Lazio",
+    logo: "img/lazio.png",
+  },
+  {
+    name: "Sporting CP",
+    logo: "img/sporting.png",
+  },
+  {
+    name: "Galatasaray",
+    logo: "img/galatasaray.png",
+  },
+  {
+    name: "Marseille",
+    logo: "img/marsel.png",
+  },
+  {
+    name: "Besiktas",
+    logo: "img/besiktas.png",
+  },
+  {
+    name: "Fenerbahçe",
+    logo: "img/fenerbace.png",
+  },
+  {
+    name: "Real Sociedad",
+    logo: "https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg",
+  },
+  {
+    name: "Valencia",
+    logo: "https://upload.wikimedia.org/wikipedia/en/c/ce/Valenciacf.svg",
+  },
+  {
+    name: "Bayer Leverkusen",
+    logo: "img/bayer.png",
+  },
+  {
+    name: "Lille",
+    logo: "img/lil.png",
+  },
+  {
+    name: "Atalanta",
+    logo: "img/atalanta.png",
+  },
+  // Нові додані команди
+  {
+    name: "Athletic Bilbao",
+    logo: "https://upload.wikimedia.org/wikipedia/en/9/98/Club_Athletic_Bilbao_logo.svg",
+  },
+  {
+    name: "Real Betis",
+    logo: "img/betis.png",
+  },
+  {
+    name: "Newcastle United",
+    logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg",
+  },
+  {
     name: "Everton",
     logo: "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg",
   },
   {
-    name: "Fiorentina",
-    logo: "https://upload.wikimedia.org/wikipedia/en/a/a5/ACF_Fiorentina_2.svg",
+    name: "Brighton",
+    logo: "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg",
   },
   {
-    name: "Lazio",
-    logo: "https://upload.wikimedia.org/wikipedia/en/5/5c/S.S._Lazio_badge.svg",
+    name: "Torino",
+    logo: "img/torino.png",
+  },
+  {
+    name: "Sampdoria",
+    logo: "img/sampdoria.png",
+  },
+  {
+    name: "Udinese",
+    logo: "img/udinese.png",
+  },
+  {
+    name: "Borussia Mönchengladbach",
+    logo: "img/borussia.png",
+  },
+  {
+    name: "Eintracht Frankfurt",
+    logo: "img/frankfurt.png",
+  },
+  {
+    name: "VfL Wolfsburg",
+    logo: "img/wolfsburg.svg",
+  },
+  {
+    name: "AS Monaco",
+    logo: "img/monaco.png",
+  },
+  {
+    name: "OGC Nice",
+    logo: "img/nice.png",
+  },
+  {
+    name: "Rennes",
+    logo: "img/renes.png",
+  },
+  {
+    name: "PSV Eindhoven",
+    logo: "img/psv.png",
+  },
+  {
+    name: "Feyenoord",
+    logo: "img/feyenord.png",
+  },
+  {
+    name: "Club Brugge",
+    logo: "img/brugge.png",
+  },
+  {
+    name: "Anderlecht",
+    logo: "img/anderleht.png",
+  },
+  {
+    name: "Celtic",
+    logo: "img/celtic.png",
+  },
+  {
+    name: "Rangers",
+    logo: "img/rangers.webp",
   },
 ];
 
@@ -182,10 +299,13 @@ function renderTeams(filter = "") {
 
 function renderSelectedTeams() {
   selectedTeamsDiv.innerHTML = "";
+  const selectedCountDiv = document.getElementById("selectedCount");
+
   if (selectedTeams.length === 0) {
-    selectedTeamsDiv.innerHTML = "<p>Немає обраних команд.</p>";
+    selectedCountDiv.textContent = "Обрано 0 команд.";
     return;
   }
+
   selectedTeams.forEach((team) => {
     const div = document.createElement("div");
     div.className = "team-item";
@@ -200,6 +320,8 @@ function renderSelectedTeams() {
     btn.addEventListener("click", () => removeTeam(team.name));
     selectedTeamsDiv.appendChild(div);
   });
+
+  selectedCountDiv.textContent = `Обрано команд: ${selectedTeams.length}`;
 }
 
 function removeTeam(teamName) {
