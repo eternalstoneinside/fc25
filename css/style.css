@@ -5,21 +5,18 @@ body {
   color: #333;
 }
 .stage {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  transition: transform 0.5s ease;
+  display: none !important;
 }
 
 .stage.active {
-  transform: translateX(0);
+  display: block !important;
 }
-.stage.left {
-  transform: translateX(-100%);
+.stage-content {
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
-.stage.right {
-  transform: translateX(100%);
+.stage.active .stage-content {
+  opacity: 1;
 }
 h1 {
   text-align: center;
@@ -59,11 +56,32 @@ h1 {
   background: #fff;
 }
 .search-input {
-  width: 100%;
+  width: 99%;
   padding: 8px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+.header-teams {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.team-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.team-list.active {
+  max-height: 1010px; /* Adjust as needed */
+  overflow-y: scroll;
+}
+@media screen and (max-width: 767px) {
+  .team-list.active {
+    max-height: 300px; /* Adjust for smaller screens */
+  }
 }
 button {
   padding: 6px 10px;
@@ -107,8 +125,32 @@ button:hover {
   justify-content: center;
   align-items: center;
 }
+.stage-assign-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.assign-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
 #stage-assign h2 {
   text-align: center;
+}
+.team-card.selected {
+  border: 2px solid #007bff;
+  background: #e6f0ff;
+}
+@media (max-width: 768px) {
+  .team-card {
+    padding: 8px;
+    font-size: 16px;
+  }
+  .dropzone {
+    min-height: 120px;
+  }
 }
 .teams-pool {
   display: flex;
@@ -218,6 +260,8 @@ button:hover {
 .player-buttons {
   display: flex;
   gap: 15px;
+  margin-bottom: 30px;
+  justify-content: center;
 }
 .player-buttons button {
   padding: 10px 20px;
@@ -248,4 +292,189 @@ button:hover {
 
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.table-container {
+  padding: 20px;
+
+  margin: 0 auto;
+}
+
+.tournament-table {
+  max-width: 650px;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 16px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tournament-table thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.tournament-table th,
+.tournament-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tournament-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-info img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.player-label {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: white;
+  font-size: 14px;
+}
+
+.player-1 {
+  background-color: #28a745;
+}
+
+.player-2 {
+  background-color: #dc3545;
+}
+.match {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+.match-number {
+  font-weight: bold;
+  margin-right: 10px;
+}
+.match-teams {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+.match-teams .team {
+  display: flex;
+  align-items: center;
+}
+.match-teams .team img {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+}
+.vs {
+  margin: 0 10px;
+  font-weight: bold;
+}
+.header-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.header-table button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.table-container {
+}
+
+.table-matches {
+  display: flex;
+  justify-content: space-around;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+#matches-list {
+  margin-top: 30px;
+}
+.match-actions {
+  display: flex;
+  gap: 10px;
+}
+@media screen and (max-width: 850px) {
+  .tournament-table {
+    max-width: 100%;
+  }
+  .match {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  #matches-list {
+    width: 100%;
+  }
+  .table-matches {
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .tournament-table td {
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+}
+@media screen and (max-width: 500px) {
+  .teams-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
+@media screen and (max-width: 420px) {
+  .tournament-table th,
+  .tournament-table td {
+    padding: 10px;
+    font-size: 14px;
+  }
+  .match-number {
+    font-size: 14px;
+  }
+  .match-teams img {
+    width: 20px;
+    height: 20px;
+  }
+  .player-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
+
+@media screen and (max-width: 1050px) {
+  .stage-selection-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .section {
+    width: 100%;
+    max-width: 600px;
+  }
 }

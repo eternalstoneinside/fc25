@@ -8,81 +8,121 @@
   </head>
   <body>
     <div id="stage-selection" class="stage active">
-      <!-- Тут вибір команд, пошук, кнопки -->
-      <h1>Менеджер турніру</h1>
-      <div
-        id="message"
-        style="color: red; margin: 10px 0; min-height: 20px"
-      ></div>
-      <div class="container">
-        <div class="section">
-          <h2>Список команд</h2>
-          <input
-            type="text"
-            id="searchInput"
-            class="search-input"
-            placeholder="Пошук за назвою..."
-          />
-          <div id="teamList"></div>
-        </div>
-        <div class="section">
-          <h2>Обрані команди</h2>
-          <div class="header-buttons">
-            <div class="teams-buttons">
-              <button id="autoFillTeams">Автозаповнення команд</button>
-              <button id="randomizeTeams">Випадкові 16 команд</button>
-              <button id="removeAllTeams">Видалити всі команди</button>
+      <div class="stage-selection-content stage-content">
+        <!-- Тут вибір команд, пошук, кнопки -->
+        <h1>Менеджер турніру</h1>
+
+        <div
+          id="message"
+          style="color: red; margin: 10px 0; min-height: 20px"
+        ></div>
+        <div class="stage-selection-container container">
+          <div class="section">
+            <div class="header-teams">
+              <h2>Список команд</h2>
+              <button class="show-teams" id="showTeams">Список команд</button>
             </div>
-            <button id="startTable" disabled>Перейти до розподілу</button>
-            <span
-              id="hint"
-              style="color: red; opacity: 0.7; display: none; font-size: 10px"
-            >
-              Виберіть щонайменше 16 команд
-            </span>
+
+            <input
+              type="text"
+              id="searchInput"
+              class="search-input"
+              placeholder="Пошук за назвою..."
+            />
+
+            <div id="teamList" class="team-list"></div>
           </div>
-          <div
-            id="selectedCount"
-            style="margin-top: 10px; font-weight: bold"
-          ></div>
-          <div id="selectedTeams"></div>
+          <div class="section">
+            <h2>Обрані команди</h2>
+            <div class="header-buttons">
+              <div class="teams-buttons">
+                <button id="autoFillTeams">Автозаповнення команд</button>
+                <button id="randomizeTeams">Випадкові 16 команд</button>
+                <button id="removeAllTeams">Видалити всі команди</button>
+              </div>
+              <button id="startTable" disabled>Перейти до розподілу</button>
+              <span
+                id="hint"
+                style="color: red; opacity: 0.7; display: none; font-size: 10px"
+              >
+                Виберіть щонайменше 16 команд
+              </span>
+            </div>
+            <div
+              id="selectedCount"
+              style="margin-top: 10px; font-weight: bold"
+            ></div>
+            <div id="selectedTeams"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div id="stage-assign" class="stage right">
-      <!-- Тут розподіл по гравцях -->
-      <h2>Розподіл команд між гравцями</h2>
-      <div class="player-buttons">
-        <button id="autoFillPlayers">Автодоповнити гравців</button>
-        <button id="randomizePlayers">Рандомно розподілити</button>
-        <button id="resetAssignments">Очистити всі призначення</button>
-      </div>
-
-      <div class="teams-pool">
-        <!-- Тут список обраних команд -->
-      </div>
-
-      <div class="players">
-        <div class="player" data-player="1">
-          <h3 class="player-nick player-one">Гравець 1</h3>
-          <!-- <img src="img/player1.svg" alt="" /> -->
-          <div class="dropzone"></div>
+    <div id="stage-assign" class="stage">
+      <div class="stage-assign-content stage-content">
+        <!-- Тут розподіл по гравцях -->
+        <h2>Розподіл команд між гравцями</h2>
+        <div class="player-buttons">
+          <button id="autoFillPlayers">Автодоповнити гравців</button>
+          <button id="randomizePlayers">Рандомно розподілити</button>
+          <button id="resetAssignments">Очистити всі призначення</button>
         </div>
-        <div class="player" data-player="2">
-          <h3 class="player-nick player-two">Гравець 2</h3>
-          <!-- <img src="img/player2.svg" alt="" /> -->
-          <div class="dropzone"></div>
+
+        <div class="teams-pool">
+          <!-- Тут список обраних команд -->
+        </div>
+
+        <div class="players">
+          <div class="player" data-player="1">
+            <h3 class="player-nick player-one">Гравець 1</h3>
+            <!-- <img src="img/player1.svg" alt="" /> -->
+            <div class="dropzone"></div>
+          </div>
+          <div class="player" data-player="2">
+            <h3 class="player-nick player-two">Гравець 2</h3>
+            <!-- <img src="img/player2.svg" alt="" /> -->
+            <div class="dropzone"></div>
+          </div>
+        </div>
+        <div class="assign-button">
+          <button id="createTable" disabled>Створити таблицю</button>
         </div>
       </div>
-
-      <button id="createTable" disabled>Створити таблицю</button>
     </div>
 
-    <div id="stage-table" class="stage right">
-      <!-- Тут майбутня таблиця -->
-      123
+    <div id="stage-table" class="stage">
+      <div class="stage-table-content stage-content">
+        <div class="table-container">
+          <div class="header-table">
+            <button onclick="generateBalancedMatches()">
+              Згенерувати матчі
+            </button>
+            <button onclick="resetPointsTable()">Очистити таблицю</button>
+            <button onclick="fullResetTournament()">Скинути турнір</button>
+          </div>
+          <div class="table-matches">
+            <table class="tournament-table">
+              <thead>
+                <tr>
+                  <th>Команда</th>
+                  <th>Гравець</th>
+                  <th>І</th>
+                  <th>В</th>
+                  <th>П</th>
+                  <th class="points">Очки</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- Сюди JS додасть рядки -->
+              </tbody>
+            </table>
+            <div id="matches-list"></div>
+          </div>
+        </div>
+      </div>
     </div>
+    <script src="js/table.js"></script>
+    <script src="js/allTeams.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>
