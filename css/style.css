@@ -412,7 +412,6 @@ button:hover {
   flex-wrap: wrap;
 }
 #matches-list {
-  display: none;
   background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
