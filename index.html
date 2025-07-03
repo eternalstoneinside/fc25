@@ -112,14 +112,44 @@
                   <th class="points">Очки</th>
                 </tr>
               </thead>
+
               <tbody id="table-body">
                 <!-- Сюди JS додасть рядки -->
               </tbody>
             </table>
-            <div id="matches-list"></div>
+            <div class="matches-container">
+              <div id="next-stage-section" class="hidden">
+                <p>Всі матчі зіграні, можемо перейти до 1/8.</p>
+                <button id="go-to-next-stage" class="next-stage-btn">
+                  Перейти до 1/8 фіналу
+                </button>
+              </div>
+              <div id="tiebreak-section" class="tiebreak-section">
+                <p id="tiebreak-info" class="tiebreak-message">
+                  🎯 Всі матчі зіграні. Є команди з 3 очками, потрібно провести
+                  тай-брейк.
+                </p>
+                <button
+                  id="generate-tiebreak"
+                  style="margin-bottom: 10px; font-size: 16px"
+                  onclick="generateTiebreakerMatches()"
+                >
+                  ⚔️ Згенерувати тай-брейк матчі
+                </button>
+                <div id="tiebreak-matches"></div>
+              </div>
+              <div id="matches-list"></div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+    <div
+      id="stage-of16"
+      style="display: flex; margin: 0 auto; text-align: center"
+      class="stage"
+    >
+      Zaharek loh, ale tse prosto sektsiya dlya 1/8 finalu.
     </div>
     <script src="js/table.js"></script>
     <script src="js/allTeams.js"></script>

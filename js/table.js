@@ -66,7 +66,7 @@ window.addEventListener("load", updatePlayerLabels);
 function generateBalancedMatches() {
   const matchesContainer = document.getElementById("matches-list");
   matchesContainer.innerHTML = "";
-
+  matchesContainer.style.display = "block";
   let player1Teams = [];
   let player2Teams = [];
 
@@ -157,6 +157,7 @@ function generateBalancedMatches() {
     matchesContainer.appendChild(matchDiv);
     matchNumber++;
     // Викликати одразу після створення
+
     updatePlayerLabels();
   });
 
@@ -173,6 +174,11 @@ function goToStage(stage) {
 document
   .getElementById("matches-list")
   .addEventListener("click", function (event) {
+    if (areAllMatchesPlayed()) {
+      checkTiebreakerAvailability();
+      checkIfTournamentFullyFinished(); // ✅ тут
+    }
+
     if (event.target.classList.contains("btn-win")) {
       const winnerName = event.target.dataset.winner;
       const loserName = event.target.dataset.loser;
@@ -197,6 +203,11 @@ document
 
       saveTableToLocalStorage();
       saveFinishedMatches();
+      // ✅ Додай це:
+      if (areAllMatchesPlayed()) {
+        checkTiebreakerAvailability();
+        checkIfTournamentFullyFinished(); // ✅ тут
+      }
     }
   });
 
@@ -256,6 +267,15 @@ function resetPointsTable() {
   enableAllButtons();
   localStorage.removeItem("finishedMatches");
   localStorage.removeItem("tournamentTable");
+  if (
+    document.getElementById("tiebreak-section").classList.contains("active")
+  ) {
+    document.getElementById("tiebreak-section").classList.remove("active");
+  }
+  // Скидаємо тайбрейк-матчі
+  document.querySelector("#next-stage-section").classList.add("hidden");
+  localStorage.removeItem("tiebreakResults");
+  localStorage.removeItem("tiebreakerMatches");
 }
 
 function enableAllButtons() {
@@ -457,6 +477,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    if (areAllMatchesPlayed()) {
+      checkTiebreakerAvailability();
+      checkIfTournamentFullyFinished(); // ✅ тут
+      restoreTiebreakMatches();
+    }
     // Блокування навігації назад (через goToStage уже реалізовано)
   }
 });
@@ -497,3 +522,310 @@ function restoreGeneratedMatches() {
     matchesContainer.appendChild(matchDiv);
   });
 }
+
+// === Перевірка завершення турніру ===
+function areAllMatchesPlayed() {
+  const totalButtons = document.querySelectorAll("#matches-list .btn-win");
+  const disabledButtons = [...totalButtons].filter((btn) => btn.disabled);
+  const tableMatches = (document.querySelector(
+    ".table-matches"
+  ).style.alignItems = "self-start");
+  const totalMatches = totalButtons.length / 2;
+  const finishedMatches = disabledButtons.length / 2;
+  return finishedMatches === totalMatches;
+}
+function checkTiebreakerAvailability() {
+  const tieTeams = getTiebreakerTeams();
+  const allPlayed = areAllMatchesPlayed();
+
+  const section = document.getElementById("tiebreak-section");
+  if (allPlayed && tieTeams.length >= 2) {
+    section.classList.add("active");
+  } else {
+    section.classList.remove("active");
+  }
+}
+
+function generateTiebreakerMatches() {
+  const teams = getTiebreakerTeams();
+  const matchesContainer = document.getElementById("tiebreak-matches");
+  matchesContainer.innerHTML = "";
+
+  if (teams.length < 2) {
+    matchesContainer.innerHTML = "<p>Недостатньо команд для тайбрейку.</p>";
+    return;
+  }
+
+  // Відокремлюємо команди по гравцях
+  const g1 = teams.filter((t) => t.player.includes("1") || t.player === "Г1");
+  const g2 = teams.filter((t) => t.player.includes("2") || t.player === "Г2");
+
+  const matches = [];
+
+  if (g1.length > 0 && g2.length > 0) {
+    // Потрібно спробувати сформувати пари між гравцями 1 та 2
+
+    // Шафл команди, щоб пари були випадкові
+    const shuffledG1 = shuffleArray(g1);
+    const shuffledG2 = shuffleArray(g2);
+
+    // Формуємо пари скільки можемо по мінімуму команд обох гравців
+    const pairsCount = Math.min(shuffledG1.length, shuffledG2.length);
+
+    for (let i = 0; i < pairsCount; i++) {
+      matches.push({ team1: shuffledG1[i], team2: shuffledG2[i] });
+    }
+
+    // Якщо залишилися команди без пари (наприклад, у гравця 1 команд більше)
+    // То беремо ці залишки і рандомно формуємо пари серед усіх тайбрейк-команд,
+    // щоб не залишити їх без суперника
+    const leftoverTeams = [];
+
+    if (shuffledG1.length > pairsCount) {
+      leftoverTeams.push(...shuffledG1.slice(pairsCount));
+    }
+    if (shuffledG2.length > pairsCount) {
+      leftoverTeams.push(...shuffledG2.slice(pairsCount));
+    }
+
+    // Якщо є залишки, формуємо додаткові пари серед них рандомно
+    if (leftoverTeams.length >= 2) {
+      const shuffledLeftover = shuffleArray(leftoverTeams);
+      for (let i = 0; i < shuffledLeftover.length - 1; i += 2) {
+        matches.push({
+          team1: shuffledLeftover[i],
+          team2: shuffledLeftover[i + 1],
+        });
+      }
+    } else if (leftoverTeams.length === 1) {
+      // Якщо залишилася одна команда без пари, то можна або залишити її без матчу,
+      // або додати логіку "bye" (перемога без гри), залежно від логіки турніру.
+      // Тут просто залишаємо без пари.
+      console.warn(
+        "Одна команда залишилася без пари у тайбрейку:",
+        leftoverTeams[0].name
+      );
+    }
+  } else {
+    // Якщо нема команд одного з гравців, просто рандомно формуємо пари зі всіх команд
+    const shuffled = shuffleArray(teams);
+    for (let i = 0; i < shuffled.length - 1; i += 2) {
+      matches.push({ team1: shuffled[i], team2: shuffled[i + 1] });
+    }
+  }
+
+  // Збереження в localStorage
+  localStorage.setItem("tiebreakerMatches", JSON.stringify(matches));
+
+  renderTiebreakMatches(matches);
+}
+function renderTiebreakMatches(matches) {
+  const matchesContainer = document.getElementById("tiebreak-matches");
+  matchesContainer.innerHTML = "";
+
+  matches.forEach((match, index) => {
+    const div = document.createElement("div");
+    div.classList.add("match");
+    div.innerHTML = `
+      <div class="match-number">Тайбрейк ${index + 1}</div>
+      <div class="match-teams">
+        <div class="team">
+          <img src="${match.team1.logo}" alt="${match.team1.name}">
+          <span>${match.team1.name}</span>
+        </div>
+        <span class="vs">VS</span>
+        <div class="team">
+          <img src="${match.team2.logo}" alt="${match.team2.name}">
+          <span>${match.team2.name}</span>
+          </div>
+      </div>
+      <div class="match-actions">
+        <button class="btn-win-tiebreak" data-winner="${
+          match.team1.name
+        }" data-loser="${match.team2.name}">Переможець: ${
+      match.team1.name
+    }</button>
+        <button class="btn-win-tiebreak" data-winner="${
+          match.team2.name
+        }" data-loser="${match.team1.name}">Переможець: ${
+      match.team2.name
+    }</button>
+      </div>
+    `;
+    matchesContainer.appendChild(div);
+  });
+}
+document
+  .getElementById("tiebreak-matches")
+  .addEventListener("click", (event) => {
+    if (event.target.classList.contains("btn-win-tiebreak")) {
+      const winner = event.target.dataset.winner;
+      const loser = event.target.dataset.loser;
+
+      updateTable(winner, loser); // Додає 1 перемогу, 3 очки
+      markTiebreakWinner(event.target);
+
+      saveTableToLocalStorage();
+      saveTiebreakResults(winner, loser);
+      checkIfTournamentFullyFinished(); // ✅ тут
+    }
+  });
+
+function markTiebreakWinner(button) {
+  const buttons = button.parentElement.querySelectorAll("button");
+  buttons.forEach((btn) => {
+    btn.disabled = true;
+    btn.style.cursor = "default";
+    if (btn === button) {
+      btn.style.backgroundColor = "green";
+      btn.style.color = "white";
+      btn.dataset.winnerButton = "true"; // ✅ Додаємо це
+    } else {
+      btn.style.backgroundColor = "red";
+      btn.style.color = "white";
+    }
+  });
+}
+function saveTiebreakResults(winner, loser) {
+  const saved = JSON.parse(localStorage.getItem("tiebreakResults") || "[]");
+  saved.push({ winner, loser });
+  localStorage.setItem("tiebreakResults", JSON.stringify(saved));
+}
+function restoreTiebreakMatches() {
+  const matches = JSON.parse(localStorage.getItem("tiebreakerMatches") || "[]");
+  if (matches.length === 0) return;
+
+  renderTiebreakMatches(matches);
+
+  const results = JSON.parse(localStorage.getItem("tiebreakResults") || "[]");
+  results.forEach(({ winner, loser }) => {
+    // НЕ оновлюємо таблицю повторно!
+    const matchDivs = document.querySelectorAll("#tiebreak-matches .match");
+    results.forEach(({ winner, loser }) => {
+      // НЕ оновлюємо таблицю повторно!
+      const matchDivs = document.querySelectorAll("#tiebreak-matches .match");
+      matchDivs.forEach((div) => {
+        const btns = div.querySelectorAll(".btn-win-tiebreak");
+        btns.forEach((btn) => {
+          if (btn.dataset.winner === winner && btn.dataset.loser === loser) {
+            btn.disabled = true;
+            btn.style.backgroundColor = "green";
+            btn.style.color = "white";
+            btn.dataset.winnerButton = "true";
+          } else if (
+            btn.dataset.winner === loser &&
+            btn.dataset.loser === winner
+          ) {
+            btn.disabled = true;
+            btn.style.backgroundColor = "red";
+            btn.style.color = "white";
+          }
+        });
+      });
+    });
+  });
+  checkIfTournamentFullyFinished(); // ✅ тут
+}
+function getTiebreakerTeams() {
+  const rows = document.querySelectorAll("#table-body tr");
+  const tieTeams = [];
+
+  rows.forEach((row) => {
+    const cells = row.querySelectorAll("td");
+    const teamName = row.querySelector(".team-info span").textContent.trim();
+    const teamLogo = row.querySelector(".team-info img").src;
+    const playerLabel = row.querySelector(".player-label").textContent.trim();
+    const points = parseInt(cells[5].textContent);
+
+    if (points === 3) {
+      tieTeams.push({
+        name: teamName,
+        player: playerLabel,
+        logo: teamLogo, // ✅ додаємо logo
+      });
+    }
+  });
+
+  return tieTeams;
+}
+function checkIfTournamentFullyFinished() {
+  const tiebreakSection = document.getElementById("tiebreak-section");
+  const nextStageSection = document.getElementById("next-stage-section");
+
+  const allMainMatchesPlayed = areAllMatchesPlayed();
+  const tiebreakTeams = getTiebreakerTeams(); // ✅ важливо
+
+  const tiebreakMatchesGenerated =
+    document.querySelectorAll("#tiebreak-matches .match").length > 0;
+
+  let allTiebreaksPlayed = true;
+
+  if (tiebreakMatchesGenerated) {
+    const tiebreakMatchDivs = document.querySelectorAll(
+      "#tiebreak-matches .match"
+    );
+    allTiebreaksPlayed = [...tiebreakMatchDivs].every((div) =>
+      div.querySelector('[data-winner-button="true"]')
+    );
+  }
+
+  console.log("🔍 Перевірка завершення:");
+  console.log("➡️ Всі основні матчі зіграні?", allMainMatchesPlayed);
+  console.log("➡️ Тайбрейки потрібні?", tiebreakTeams.length >= 2);
+  console.log("➡️ Тайбрейки згенеровані?", tiebreakMatchesGenerated);
+  console.log("➡️ Всі тайбрейки зіграні? (data)", allTiebreaksPlayed);
+
+  // ✅ Правильна умова:
+  const showNextButton =
+    allMainMatchesPlayed &&
+    (tiebreakTeams.length < 2 ||
+      (tiebreakMatchesGenerated && allTiebreaksPlayed));
+
+  if (showNextButton) {
+    console.log("✅ ПОКАЗУЄМО кнопку 1/8");
+    nextStageSection.classList.remove("hidden");
+  } else {
+    console.log("❌ ХОВАЄМО кнопку 1/8");
+    nextStageSection.classList.add("hidden");
+  }
+  const tiebreakGenerateBtn = document.getElementById("generate-tiebreak");
+
+  if (showNextButton) {
+    console.log("🔒 Блокуємо тайбрейк-генерацію");
+    if (tiebreakGenerateBtn) {
+      tiebreakGenerateBtn.disabled = true;
+      tiebreakGenerateBtn.style.opacity = "0.5";
+      tiebreakGenerateBtn.style.cursor = "not-allowed";
+    }
+  } else {
+    console.log("🔓 Дозволяємо генерувати тайбрейк");
+    if (tiebreakGenerateBtn) {
+      tiebreakGenerateBtn.disabled = false;
+      tiebreakGenerateBtn.style.opacity = "1";
+      tiebreakGenerateBtn.style.cursor = "pointer";
+    }
+  }
+  const tiebreakInfo = document.getElementById("tiebreak-info");
+
+  if (tiebreakInfo) {
+    if (!allMainMatchesPlayed) {
+      tiebreakInfo.textContent =
+        "⏳ Очікуємо завершення всіх матчів групового етапу...";
+    } else if (tiebreakTeams.length >= 2 && !tiebreakMatchesGenerated) {
+      tiebreakInfo.textContent =
+        "🎯 Всі матчі зіграні. Є команди з 3 очками, потрібно провести тай-брейк.";
+    } else if (
+      tiebreakTeams.length >= 2 &&
+      tiebreakMatchesGenerated &&
+      !allTiebreaksPlayed
+    ) {
+      tiebreakInfo.textContent = "⚔️ Тай-брейк у процесі. Завершіть усі матчі.";
+    } else {
+      tiebreakInfo.textContent = "✅ Можна переходити до 1/8 фіналу.";
+    }
+  }
+}
+
+document.getElementById("go-to-next-stage").addEventListener("click", () => {
+  goToStage("of16"); // бо goToStage сам додає "stage-"
+});

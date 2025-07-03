@@ -310,6 +310,7 @@ button:hover {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 20px;
 }
 
 .tournament-table thead {
@@ -411,7 +412,11 @@ button:hover {
   flex-wrap: wrap;
 }
 #matches-list {
-  margin-top: 30px;
+  display: none;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .match-actions {
   display: flex;
@@ -428,7 +433,6 @@ button:hover {
     gap: 10px;
   }
   #matches-list {
-    width: 100%;
   }
   .table-matches {
     justify-content: center;
@@ -472,9 +476,48 @@ button:hover {
   .stage-selection-container {
     flex-direction: column;
     align-items: center;
+    width: 90%;
   }
   .section {
     width: 100%;
     max-width: 600px;
   }
+}
+.tiebreak-section {
+  display: none;
+  margin-bottom: 20px;
+  background: #f9f9f9;
+  padding: 20px;
+  padding-top: 5px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.tiebreak-section.active {
+  display: block !important;
+}
+.tiebreak-section.active .table-matches {
+  align-items: self-start;
+}
+.hidden {
+  display: none;
+}
+#next-stage-section {
+  margin-bottom: 20px;
+  text-align: center;
+  background: #f9f9f9;
+  padding: 20px;
+  padding-top: 5px;
+  font-size: 18px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.next-stage-btn {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #0080ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
 }
