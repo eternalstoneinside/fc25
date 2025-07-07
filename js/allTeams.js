@@ -237,4 +237,12 @@ const allTeams = [
     name: "Rangers",
     logo: "img/rangers.webp",
   },
+  {
+    name: "Inter Miami",
+    logo: "img/miami.png",
+  },
+  {
+    name: "Al Nassr",
+    logo: "img/nassr.png",
+  },
 ];

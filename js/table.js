@@ -432,6 +432,8 @@ function fullResetTournament() {
   localStorage.removeItem("finishedMatches");
   localStorage.removeItem("generatedMatches");
   localStorage.removeItem("selectedTeams");
+  localStorage.removeItem("tiebreakerMatches");
+  localStorage.removeItem("tiebreakResults");
   location.reload();
 }
 
@@ -826,6 +828,6 @@ function checkIfTournamentFullyFinished() {
   }
 }
 
-document.getElementById("go-to-next-stage").addEventListener("click", () => {
-  goToStage("of16"); // бо goToStage сам додає "stage-"
-});
+// document.getElementById("go-to-next-stage").addEventListener("click", () => {
+//   goToStage("of16"); // бо goToStage сам додає "stage-"
+// });

@@ -34,6 +34,11 @@ h1 {
   min-width: 300px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.team-style {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .team-item {
   display: flex;
   align-items: center;
@@ -519,4 +524,38 @@ button:hover {
   border-radius: 8px;
   width: 100%;
   cursor: pointer;
+}
+
+.bracket {
+  display: grid;
+  gap: 20px;
+  /* кількість колонок залежить від раунду */
+}
+.round {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.match {
+  background: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.match button {
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.hidden {
+  display: none !important;
+}
+.btn-win.win {
+  background-color: #28a745;
+  color: #fff;
+  font-weight: bold;
 }

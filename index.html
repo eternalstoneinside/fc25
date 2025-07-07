@@ -144,15 +144,19 @@
         </div>
       </div>
     </div>
+    <div id="stage-of16" class="stage hidden" data-title="1/8 фіналу"></div>
     <div
-      id="stage-of16"
-      style="display: flex; margin: 0 auto; text-align: center"
-      class="stage"
-    >
-      Zaharek loh, ale tse prosto sektsiya dlya 1/8 finalu.
-    </div>
-    <script src="js/table.js"></script>
+      id="stage-quarter"
+      class="stage hidden"
+      data-title="Чвертьфінали"
+    ></div>
+    <div id="stage-semi" class="stage hidden" data-title="Півфінали"></div>
+    <div id="stage-final" class="stage hidden" data-title="Фінал"></div>
+    <!-- 1) Спочатку дані та генерація таблиці -->
     <script src="js/allTeams.js"></script>
+    <script src="js/table.js"></script>
     <script src="js/main.js"></script>
+    <!-- 2) Потім плей‑офф, який читає вже готову таблицю -->
+    <script src="js/bracket.js"></script>
   </body>
 </html>
