@@ -4,6 +4,7 @@ body {
   background: #f4f4f4;
   color: #333;
 }
+
 .stage {
   display: none !important;
 }
@@ -246,7 +247,7 @@ button:hover {
   display: block;
   width: 20px;
   height: 20px;
-  background: url("../img/player1.svg") no-repeat center / cover;
+  background: url("../img/player2.svg") no-repeat center / cover;
   margin-bottom: 2px;
 }
 .player-two::after {
@@ -254,7 +255,7 @@ button:hover {
   display: block;
   width: 20px;
   height: 20px;
-  background: url("../img/player2.svg") no-repeat center / cover;
+  background: url("../img/player1.svg") no-repeat center / cover;
   margin-bottom: 2px;
 }
 .player h3 {
@@ -353,10 +354,11 @@ button:hover {
   font-weight: bold;
   color: white;
   font-size: 14px;
+  margin-left: 5px;
 }
 
 .player-1 {
-  background-color: #28a745;
+  background-color: #0056b3;
 }
 
 .player-2 {
@@ -366,6 +368,16 @@ button:hover {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+.match-bracket {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
   border: 1px solid #ccc;
   padding: 6px 10px;
   border-radius: 4px;
@@ -397,7 +409,7 @@ button:hover {
   justify-content: center;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 .header-table button {
   padding: 10px 20px;
@@ -407,22 +419,36 @@ button:hover {
   border-radius: 4px;
   cursor: pointer;
 }
-.table-container {
-}
 
 .table-matches {
   display: flex;
   justify-content: space-around;
-  align-items: baseline;
   flex-wrap: wrap;
 }
 #matches-list {
   background: #f9f9f9;
   padding: 20px;
+  display: none;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+#matches-list.show {
+  display: block;
+}
+.internal-match-label {
+  font-size: 12px;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  margin-top: 4px;
+}
 .match-actions {
+  display: flex;
+  gap: 10px;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+.match-bracket-actions {
   display: flex;
   gap: 10px;
 }
@@ -436,8 +462,7 @@ button:hover {
     align-items: center;
     gap: 10px;
   }
-  #matches-list {
-  }
+
   .table-matches {
     justify-content: center;
   }
@@ -491,13 +516,15 @@ button:hover {
   display: none;
   margin-bottom: 20px;
   background: #f9f9f9;
+  text-align: center;
+  flex-direction: column;
   padding: 20px;
   padding-top: 5px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .tiebreak-section.active {
-  display: block !important;
+  display: flex !important;
 }
 .tiebreak-section.active .table-matches {
   align-items: self-start;
@@ -542,7 +569,7 @@ button:hover {
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between;
+  width: 99%;
   align-items: center;
 }
 .match button {
@@ -558,4 +585,79 @@ button:hover {
   background-color: #28a745;
   color: #fff;
   font-weight: bold;
+}
+
+.btn-win.winner {
+  background-color: green;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btn-win.loser {
+  background-color: red;
+  color: white;
+  cursor: not-allowed;
+}
+@media screen and (max-width: 500px) {
+  .match-teams {
+    margin-right: 0;
+  }
+  .team span {
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .team .player-label {
+    display: none;
+  }
+  #matches-list {
+    background: transparent;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: none;
+    width: 94%;
+  }
+  #tiebreak-matches {
+    width: 94%;
+  }
+  .match-bracket {
+    width: 94% !important;
+  }
+  .match-bracket-actions {
+    order: 1;
+  }
+  h3 {
+    text-align: center;
+  }
+  .match.match-bracket {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .match.match-bracket .match-bracket-actions {
+    order: 3; /* після команд */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .match.match-bracket .team-style {
+    order: 1;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .match.match-bracket .team-style:last-of-type {
+    order: 2;
+  }
+
+  .btn-win {
+    width: 90%;
+    max-width: 300px;
+    font-size: 14px;
+  }
 }

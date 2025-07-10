@@ -540,3 +540,20 @@ document.getElementById("resetAssignments").addEventListener("click", () => {
   // Оновлюємо кнопку створення таблиці (вимикаємо)
   checkReadyToCreateTable();
 });
+// localStorage.clear();
+document.addEventListener("DOMContentLoaded", () => {
+  const currentStage = localStorage.getItem("currentStage");
+  const knockoutResults = JSON.parse(
+    localStorage.getItem("knockoutResults") || "{}"
+  );
+
+  if (currentStage) {
+    goToRound(currentStage);
+  } else if (localStorage.getItem("matchesGenerated") === "true") {
+    // Якщо турнірна таблиця створена, але сітка ще не почалась
+    goToStage("table");
+  } else {
+    // Початкова сторінка (додавання команд)
+    goToStage("selection");
+  }
+});

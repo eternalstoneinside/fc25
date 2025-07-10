@@ -66,7 +66,8 @@ window.addEventListener("load", updatePlayerLabels);
 function generateBalancedMatches() {
   const matchesContainer = document.getElementById("matches-list");
   matchesContainer.innerHTML = "";
-  matchesContainer.style.display = "block";
+  matchesContainer.classList.add("show");
+
   let player1Teams = [];
   let player2Teams = [];
 
@@ -79,12 +80,22 @@ function generateBalancedMatches() {
     const teamLogo = row.querySelector(".team-info img").src;
 
     if (playerLabel.includes("Гравець 1") || playerLabel.includes("Г1")) {
-      player1Teams.push({ name: teamName, logo: teamLogo, count: 0 });
+      player1Teams.push({
+        name: teamName,
+        logo: teamLogo,
+        count: 0,
+        player: "Гравець 1",
+      });
     } else if (
       playerLabel.includes("Гравець 2") ||
       playerLabel.includes("Г2")
     ) {
-      player2Teams.push({ name: teamName, logo: teamLogo, count: 0 });
+      player2Teams.push({
+        name: teamName,
+        logo: teamLogo,
+        count: 0,
+        player: "Гравець 2",
+      });
     }
   });
 
@@ -137,32 +148,46 @@ function generateBalancedMatches() {
     const matchDiv = document.createElement("div");
     matchDiv.classList.add("match");
     matchDiv.innerHTML = `
-      <div class="match-number">Матч ${matchNumber}</div>
-      <div class="match-teams">
-        <div class="team">
-          <img src="${match.p1.logo}" alt="${match.p1.name}">
-          <span>${match.p1.name}</span>
-        </div>
-        <span class="vs">VS</span>
-        <div class="team">
-          <img src="${match.p2.logo}" alt="${match.p2.name}">
-          <span>${match.p2.name}</span>
-        </div>
+    <div class="match-number">Матч ${matchNumber}</div>
+    <div class="match-teams">
+      <div class="team">
+        <img src="${match.p1.logo}" alt="${match.p1.name}">
+        <span>${match.p1.name}</span>
+        <span class="player-label ${
+          match.p1.player.includes("2") ? "player-2" : "player-1"
+        }">
+          ${match.p1.player.replace("Гравець", "Г")}
+        </span>
       </div>
-      <div class="match-actions">
-        <button class="btn-win" data-winner="${match.p1.name}" data-loser="${match.p2.name}">Переможець: ${match.p1.name}</button>
-        <button class="btn-win" data-winner="${match.p2.name}" data-loser="${match.p1.name}">Переможець: ${match.p2.name}</button>
+      <span class="vs">VS</span>
+      <div class="team">
+        <img src="${match.p2.logo}" alt="${match.p2.name}">
+        <span>${match.p2.name}</span>
+        <span class="player-label ${
+          match.p2.player.includes("2") ? "player-2" : "player-1"
+        }">
+          ${match.p2.player.replace("Гравець", "Г")}
+        </span>
       </div>
-    `;
+    </div>
+    <div class="match-actions">
+      <button class="btn-win" data-winner="${match.p1.name}" data-loser="${
+      match.p2.name
+    }">Переможець: ${match.p1.name}</button>
+      <button class="btn-win" data-winner="${match.p2.name}" data-loser="${
+      match.p1.name
+    }">Переможець: ${match.p2.name}</button>
+    </div>
+  `;
     matchesContainer.appendChild(matchDiv);
     matchNumber++;
-    // Викликати одразу після створення
 
-    updatePlayerLabels();
+    updatePlayerLabels(); // це залишаємо
   });
 
   localStorage.setItem("generatedMatches", JSON.stringify(matches));
   localStorage.setItem("matchesGenerated", "true");
+  resetPointsTable();
 }
 function goToStage(stage) {
   document.querySelectorAll(".stage").forEach((s) => {
@@ -188,16 +213,19 @@ document
       const buttons = event.target.parentElement.querySelectorAll("button");
       buttons.forEach((btn) => {
         btn.disabled = true;
-        if (btn.dataset.winner === winnerName) {
+        btn.style.cursor = "default";
+
+        const isWinner = btn.dataset.winner === winnerName;
+
+        if (isWinner) {
           btn.style.backgroundColor = "green";
           btn.style.color = "white";
-          btn.style.cursor = "default";
-          // позначаємо цю кнопку як переможну
+          btn.textContent = `Переможець: ${btn.dataset.winner}`;
           btn.dataset.winnerButton = "true";
         } else {
           btn.style.backgroundColor = "red";
           btn.style.color = "white";
-          btn.style.cursor = "default";
+          btn.textContent = `Програвший: ${btn.dataset.winner}`;
         }
       });
 
@@ -266,7 +294,7 @@ function resetPointsTable() {
   sortTableByPointsAndWins();
   enableAllButtons();
   localStorage.removeItem("finishedMatches");
-  localStorage.removeItem("tournamentTable");
+
   if (
     document.getElementById("tiebreak-section").classList.contains("active")
   ) {
@@ -442,7 +470,12 @@ document.addEventListener("DOMContentLoaded", () => {
     stageSelection.classList.remove("active");
     stageAssign.classList.remove("active");
     stageTable.classList.add("active");
+    const matchesContainer = document.getElementById("matches-list");
+    matchesContainer.classList.add("show");
   }
+  // if (localStorage.getItem("matchesGenerated") === "true") {
+
+  // }
   const matchesAlreadyGenerated =
     localStorage.getItem("matchesGenerated") === "true";
 
@@ -500,27 +533,33 @@ function restoreGeneratedMatches() {
     const matchDiv = document.createElement("div");
     matchDiv.classList.add("match");
     matchDiv.innerHTML = `
-      <div class="match-number">Матч ${index + 1}</div>
-      <div class="match-teams">
-        <div class="team">
-          <img src="${match.p1.logo}" alt="${match.p1.name}">
-          <span>${match.p1.name}</span>
-        </div>
-        <span class="vs">VS</span>
-        <div class="team">
-          <img src="${match.p2.logo}" alt="${match.p2.name}">
-          <span>${match.p2.name}</span>
-        </div>
+    <div class="match-number">Матч ${index + 1}</div>
+    <div class="match-teams">
+      <div class="team">
+        <img src="${match.p1.logo}" alt="${match.p1.name}">
+        <span>${match.p1.name}</span>
+        <span class="player-label ${
+          match.p1.player.includes("2") ? "player-2" : "player-1"
+        }">${match.p1.player.replace("Гравець", "Г")}</span>
       </div>
-      <div class="match-actions">
-        <button class="btn-win" data-winner="${match.p1.name}" data-loser="${
+      <span class="vs">VS</span>
+      <div class="team">
+        <img src="${match.p2.logo}" alt="${match.p2.name}">
+        <span>${match.p2.name}</span>
+        <span class="player-label ${
+          match.p2.player.includes("2") ? "player-2" : "player-1"
+        }">${match.p2.player.replace("Гравець", "Г")}</span>
+      </div>
+    </div>
+    <div class="match-actions">
+      <button class="btn-win" data-winner="${match.p1.name}" data-loser="${
       match.p2.name
     }">Переможець: ${match.p1.name}</button>
-        <button class="btn-win" data-winner="${match.p2.name}" data-loser="${
+      <button class="btn-win" data-winner="${match.p2.name}" data-loser="${
       match.p1.name
     }">Переможець: ${match.p2.name}</button>
-      </div>
-    `;
+    </div>
+  `;
     matchesContainer.appendChild(matchDiv);
   });
 }
@@ -629,31 +668,46 @@ function renderTiebreakMatches(matches) {
     const div = document.createElement("div");
     div.classList.add("match");
     div.innerHTML = `
-      <div class="match-number">Тайбрейк ${index + 1}</div>
-      <div class="match-teams">
-        <div class="team">
-          <img src="${match.team1.logo}" alt="${match.team1.name}">
-          <span>${match.team1.name}</span>
-        </div>
-        <span class="vs">VS</span>
-        <div class="team">
-          <img src="${match.team2.logo}" alt="${match.team2.name}">
-          <span>${match.team2.name}</span>
-          </div>
-      </div>
-      <div class="match-actions">
-        <button class="btn-win-tiebreak" data-winner="${
-          match.team1.name
-        }" data-loser="${match.team2.name}">Переможець: ${
+  <div class="match-number">Тайбрейк ${index + 1}</div>
+  <div class="match-teams">
+    <div class="team">
+      <img src="${match.team1.logo}" alt="${match.team1.name}">
+      <span>${match.team1.name}</span>
+      <span class="player-label ${
+        match.team1.player.includes("2") ? "player-2" : "player-1"
+      }">
+        ${match.team1.player.replace("Гравець", "Г")}
+      </span>
+    </div>
+    <span class="vs">VS</span>
+    <div class="team">
+      <img src="${match.team2.logo}" alt="${match.team2.name}">
+      <span>${match.team2.name}</span>
+      <span class="player-label ${
+        match.team2.player.includes("2") ? "player-2" : "player-1"
+      }">
+        ${match.team2.player.replace("Гравець", "Г")}
+      </span>
+    </div>
+  </div>
+  ${
+    match.team1.player === match.team2.player
+      ? `<div class="internal-match-label">(внутрішній матч)</div>`
+      : ""
+  }
+  <div class="match-actions">
+    <button class="btn-win-tiebreak" data-winner="${
       match.team1.name
-    }</button>
-        <button class="btn-win-tiebreak" data-winner="${
-          match.team2.name
-        }" data-loser="${match.team1.name}">Переможець: ${
+    }" data-loser="${match.team2.name}">
+      Переможець: ${match.team1.name}
+    </button>
+    <button class="btn-win-tiebreak" data-winner="${
       match.team2.name
-    }</button>
-      </div>
-    `;
+    }" data-loser="${match.team1.name}">
+      Переможець: ${match.team2.name}
+    </button>
+  </div>
+`;
     matchesContainer.appendChild(div);
   });
 }

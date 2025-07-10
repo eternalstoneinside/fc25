@@ -246,3 +246,6 @@ const allTeams = [
     logo: "img/nassr.png",
   },
 ];
+function getAllTeams() {
+  return JSON.parse(localStorage.getItem("teams")) || [];
+}
